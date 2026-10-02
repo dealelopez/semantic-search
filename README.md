@@ -264,6 +264,20 @@ export NOTES_DIR=/ruta/a/tu/vault
 python -m src.cli health
 ```
 
+### Hook pre-commit anti-PII
+
+Un hook de git (Python, sin dependencias) que bloquea el commit si detecta
+claves privadas, tokens, emails, rutas locales con tu usuario o literales de
+`scripts/pii_denylist.txt`:
+
+```bash
+scripts/install_hooks.sh   # una vez por clon
+```
+
+Revisión manual: `python3 scripts/check_no_pii.py` (staged) o
+`python3 scripts/check_no_pii.py --all` (todo el repo). Tus valores reales van
+en `scripts/pii_denylist.local.txt` (ignorado por git, nunca se commitea).
+
 ## Troubleshooting
 
 **"No se puede conectar a Ollama"**

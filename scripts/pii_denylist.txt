@@ -1,0 +1,17 @@
+# =============================================================================
+# pii_denylist.txt — Literales propios a bloquear en commits (versonado)
+# =============================================================================
+# Una entrada por línea. Comparación insensible a mayúsculas. Las líneas
+# vacías y las que empiezan por # se ignoran.
+#
+# IMPORTANTE: esto se commitea al repo. NO pongas aquí secretos reales
+# (van en scripts/pii_denylist.local.txt, que está en .gitignore y nunca
+# se commitea). Aquí solo huellas genéricas que quieres que no vuelvan
+# a aparecer, o déjalo vacío: los patrones del script ya cubren claves,
+# tokens, emails y rutas locales.
+# =============================================================================
+
+# --- Ejemplos (comentados: quita el # para activarlos) ---
+# 192.168.1.100
+# home.lan
+# HP ProDesk

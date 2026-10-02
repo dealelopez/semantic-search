@@ -1,0 +1,4 @@
+#!/bin/sh
+# pre-commit (versionado) — delega en scripts/check_no_pii.py.
+# Instalación (una vez por clon): scripts/install_hooks.sh
+exec python3 "$(git rev-parse --show-toplevel)/scripts/check_no_pii.py"
