@@ -7,7 +7,11 @@
 
 import pytest
 
-from src.cli import build_parser
+from unittest.mock import Mock
+
+from src import config
+from src.cli import _cmd_index, build_parser
+from src.models import IndexReport
 
 
 @pytest.fixture
@@ -101,3 +105,35 @@ class TestOtrosSubcomandos:
     def test_sin_subcomando(self, parser):
         args = parser.parse_args([])
         assert args.command is None
+
+
+# ---------------------------------------------------------------------------
+# index — aviso si no hay notas que indexar
+# ---------------------------------------------------------------------------
+
+class TestIndexAvisoDirectorio:
+
+    def test_avisa_si_directorio_sin_md(self, tmp_path, capsys, monkeypatch):
+        monkeypatch.setattr(config, "NOTES_DIR", str(tmp_path))
+        indexer = Mock()
+        _cmd_index(indexer, "full")
+        assert "No se encontraron ficheros .md" in capsys.readouterr().out
+        indexer.full_reindex.assert_not_called()
+
+    def test_avisa_si_directorio_no_existe(self, tmp_path, capsys, monkeypatch):
+        monkeypatch.setattr(config, "NOTES_DIR", str(tmp_path / "no-existe"))
+        indexer = Mock()
+        _cmd_index(indexer, "incremental")
+        assert "No se encontraron ficheros .md" in capsys.readouterr().out
+        indexer.incremental_index.assert_not_called()
+
+    def test_procesa_si_hay_md(self, tmp_path, capsys, monkeypatch):
+        (tmp_path / "nota.md").write_text("# Hola\n\nContenido.\n", encoding="utf-8")
+        monkeypatch.setattr(config, "NOTES_DIR", str(tmp_path))
+        indexer = Mock()
+        indexer.full_reindex.return_value = IndexReport(
+            notes_processed=1, chunks_created=2, duration_seconds=1.5,
+        )
+        _cmd_index(indexer, "full")
+        indexer.full_reindex.assert_called_once()
+        assert "No se encontraron ficheros .md" not in capsys.readouterr().out

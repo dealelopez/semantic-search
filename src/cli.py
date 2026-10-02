@@ -22,6 +22,7 @@ import readline  # noqa: F401 — habilita historial con flechas en input()
 import sys
 import threading
 import time
+from pathlib import Path
 
 from rich.console import Console
 
@@ -250,6 +251,15 @@ def _cmd_health(embedder: OllamaEmbedder, store: VectorStore) -> None:
 def _cmd_index(indexer: Indexer, mode: str) -> None:
     """Subcomando index: indexa las notas."""
     notes_dir = config.NOTES_DIR
+
+    # Aviso temprano si no hay nada que indexar. Además de informar, evita
+    # que un `full` borre la colección (reset) por un directorio mal montado.
+    if not Path(notes_dir).is_dir() or not any(Path(notes_dir).rglob("*.md")):
+        console.print(
+            f"  [yellow]WARN[/yellow] No se encontraron ficheros .md en {notes_dir}. "
+            "¿Has montado las notas?"
+        )
+        return
 
     if mode == "full":
         console.print("\n[bold]Indexación COMPLETA[/bold] — se reindexará todo desde cero")
