@@ -230,6 +230,8 @@ Todas las variables se configuran en `.env` (ver `example.env` para referencia):
 | `CHROMA_HOST` | `chromadb` | Hostname de ChromaDB |
 | `CHROMA_PORT` | `8000` | Puerto de ChromaDB |
 | `COLLECTION_NAME` | `notas` | Nombre de la colección vectorial |
+| `DATA_DIR` | `./chroma-data` | Ruta en el host donde persiste el índice ChromaDB |
+| `PUID` / `PGID` | `1000` | UID/GID con los que corren los contenedores (ver con `id -u` / `id -g`) |
 | `NOTES_HOST_DIR` | `./notas` | Ruta en el host a tu vault (no hay ejemplos en el repo; apunta a tu carpeta real) |
 | `NOTES_DIR` | `/notas` | Ruta dentro del contenedor (no cambiar) |
 | `NOTES_IGNORE_DIRS` | `.obsidian,.trash,.git,_templates` | Directorios a ignorar (separados por coma) |
@@ -288,6 +290,11 @@ en `scripts/pii_denylist.local.txt` (ignorado por git, nunca se commitea).
 **"No se puede conectar a ChromaDB"**
 - `docker compose up -d chromadb`
 - Espera al healthcheck: `docker compose ps` (debe mostrar "healthy")
+
+**"Permission denied" escribiendo en DATA_DIR**
+- El directorio debe existir ANTES del primer arranque y pertenecer a tu
+  usuario (`PUID`/`PGID` en `.env`): si lo crea Docker solo, queda como root.
+- `sudo chown -R "$(id -u):$(id -g)" "$DATA_DIR"` (con tu ruta real)
 
 **"Modelo no disponible"**
 - `ollama pull nomic-embed-text` en el servidor con Ollama

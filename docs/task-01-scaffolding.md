@@ -26,8 +26,8 @@ Crear la estructura de directorios, `docker-compose.yml`, `Dockerfile`, `example
 
 Dos servicios:
 
-- **chromadb**: imagen `chromadb/chroma:1.5.3`, puerto 8000, volumen `./chroma-data:/data`, healthcheck en `/api/v2/heartbeat`, límite de memoria 512M.
-- **app**: build desde `Dockerfile`, env_file `.env`, depends_on `chromadb` (healthy), volumen `./notas:/notas:ro` (solo lectura), `extra_hosts` para `host.docker.internal`.
+- **chromadb**: imagen `chromadb/chroma:1.5.3`, puerto 8000, volumen `${DATA_DIR:-./chroma-data}:/data` (DATA_DIR en `.env`), `user: ${PUID}:${PGID}` (para no escribir como root), healthcheck en `/api/v2/heartbeat`, límite de memoria 512M.
+- **app**: build desde `Dockerfile`, env_file `.env`, `user: ${PUID}:${PGID}` (sustituye a `appuser`), depends_on `chromadb` (healthy), volumen `${NOTES_HOST_DIR:-./notas}:/notas:ro` (solo lectura), `extra_hosts` para `host.docker.internal`.
 
 ### Dockerfile
 

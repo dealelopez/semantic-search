@@ -23,14 +23,18 @@ services:
   # similitud. Es como una base de datos, pero en lugar de buscar por
   # valores exactos, busca por cercanía en un espacio de N dimensiones.
   #
-  # Los datos se persisten en ./chroma-data para que sobrevivan a
+  # Los datos se persisten en ${DATA_DIR:-./chroma-data} para que sobrevivan a
   # reinicios del contenedor. Sin esto, perderías el índice cada vez.
+  # DATA_DIR se define en .env (ruta en el host, default: ./chroma-data).
   chromadb:
     image: chromadb/chroma:1.5.3
     container_name: semantic-search-chromadb
     restart: unless-stopped
+    # UID:GID con los que corre el contenedor (PUID/PGID en .env).
+    # Así los ficheros de DATA_DIR quedan con tu propietario, no root.
+    user: "${PUID:-1000}:${PGID:-1000}"
     volumes:
-      - ./chroma-data:/data
+      - ${DATA_DIR:-./chroma-data}:/data
     ports:
       - "8000:8000"
     healthcheck:
@@ -56,6 +60,9 @@ services:
     build: .
     container_name: semantic-search-app
     env_file: .env
+    # Mismo UID:GID que chromadb (PUID/PGID en .env). Sustituye al usuario
+    # 'appuser' de la imagen: la app solo lee /notas (:ro) y no escribe nada.
+    user: "${PUID:-1000}:${PGID:-1000}"
     depends_on:
       chromadb:
         condition: service_healthy
