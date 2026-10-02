@@ -1,0 +1,37 @@
+# =============================================================================
+# Dependencias de producción — Buscador Semántico Local
+# =============================================================================
+# Versiones pinneadas para reproducibilidad. Actualizar con cuidado.
+#
+# IMPORTANTE: la versión de chromadb-client DEBE coincidir con la imagen
+# Docker de ChromaDB (chromadb/chroma:X.Y.Z en docker-compose.yml).
+# Si actualizas una, actualiza la otra. Versiones desalineadas causan
+# errores de protocolo porque la API HTTP cambia entre majors.
+#
+# Para dependencias de test/desarrollo, ver requirements-dev.txt.
+# =============================================================================
+
+# Cliente HTTP para comunicarse con Ollama (API de embeddings).
+# httpx es moderno, soporta async, y tiene mejor API que requests.
+httpx==0.28.1
+
+# Cliente Python para ChromaDB en modo servidor (HTTP).
+# Nota: usamos chromadb-client (solo el cliente HTTP), no chromadb completo,
+# porque ChromaDB corre en su propio contenedor Docker.
+# ⚠️  La versión debe coincidir con la imagen Docker (ver docker-compose.yml).
+chromadb-client==1.5.3
+
+# Parser de frontmatter YAML en ficheros Markdown.
+# Separa automáticamente el bloque YAML del contenido del documento.
+python-frontmatter==1.1.0
+
+# Parser YAML (dependencia de python-frontmatter, pero la pinneamos explícitamente).
+PyYAML==6.0.2
+
+# Librería para output bonito en terminal: colores, tablas, progress bars.
+# Hace que la CLI sea mucho más legible y agradable de usar.
+rich==14.0.0
+
+# Monitoreo de cambios en ficheros para el modo watch.
+# Detecta creación, modificación y eliminación de .md en tiempo real.
+watchdog==6.0.0

@@ -1,0 +1,44 @@
+# =============================================================================
+# .dockerignore — Excluir del build context de Docker
+# =============================================================================
+# Sin este fichero, "docker build" envía TODOS los ficheros al daemon,
+# incluyendo datos pesados y secretos. Esto acelera el build y evita
+# filtrar información sensible a la imagen.
+# =============================================================================
+
+.git
+.env
+.env.*
+.gitignore
+.dockerignore
+
+# Datos persistidos (pesado, no pertenece a la imagen)
+chroma-data/
+
+# Solo necesarios en desarrollo, no en la imagen de producción
+tests/
+docs/
+notas/
+
+# Artefactos Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentación (no se necesita en runtime)
+*.md
+LICENSE

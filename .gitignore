@@ -1,0 +1,47 @@
+# === Entorno local ===
+.env*
+!.env.example
+!.env.*.example
+
+# === Docker Compose (overrides locales, pueden contener secretos/puertos) ===
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# === Datos de ChromaDB (persistidos en volumen Docker) ===
+chroma-data/
+
+# === Notas (mountpoint local :ro, definido en .env vía NOTES_HOST_DIR) ===
+/notas/
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+.ruff_cache/
+.venv/
+venv/
+.python-version
+
+# === Cobertura de tests ===
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.hypothesis/
+
+# === Logs ===
+*.log
+
+# === IDE ===
+.vscode/
+.idea/
+
+# === OS ===
+.DS_Store
+Thumbs.db

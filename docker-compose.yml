@@ -1,0 +1,73 @@
+# =============================================================================
+# Docker Compose — Buscador Semántico Local
+# =============================================================================
+#
+# Servicios:
+#   chromadb  → Base de datos vectorial (almacena embeddings)
+#   app       → Aplicación Python (CLI de búsqueda semántica)
+#
+# Uso rápido:
+#   docker compose up -d chromadb          # Arranca solo ChromaDB
+#   docker compose run app health          # Comprueba conexiones
+#   docker compose run app index --mode full   # Indexa todas las notas
+#   docker compose run app search "mi consulta"  # Busca
+#
+# Ollama NO está en este compose — corre en otro equipo de la red local
+# y se configura con la variable OLLAMA_BASE_URL en .env
+# =============================================================================
+
+services:
+
+  # ─── ChromaDB (base de datos vectorial) ──────────────────────────
+  # ChromaDB almacena los vectores (embeddings) y permite buscar por
+  # similitud. Es como una base de datos, pero en lugar de buscar por
+  # valores exactos, busca por cercanía en un espacio de N dimensiones.
+  #
+  # Los datos se persisten en ./chroma-data para que sobrevivan a
+  # reinicios del contenedor. Sin esto, perderías el índice cada vez.
+  chromadb:
+    image: chromadb/chroma:1.5.3
+    container_name: semantic-search-chromadb
+    restart: unless-stopped
+    volumes:
+      - ./chroma-data:/data
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v2/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ─── Aplicación Python (CLI) ─────────────────────────────────────
+  # Contiene toda la lógica: parsear notas, trocearlas, generar embeddings
+  # vía Ollama, almacenarlos en ChromaDB, y buscar.
+  #
+  # Volúmenes:
+  #   ./notas:/notas:ro  → Las notas Markdown se montan en solo lectura.
+  #                         Así puedes poner tus notas en ./notas/ y la app
+  #                         las lee sin poder modificarlas.
+  app:
+    build: .
+    container_name: semantic-search-app
+    env_file: .env
+    depends_on:
+      chromadb:
+        condition: service_healthy
+    volumes:
+      # Notas en solo lectura — la app lee pero nunca modifica tus ficheros.
+      # NOTES_HOST_DIR se define en .env (ruta en el host).
+      # /notas es la ruta dentro del contenedor (la que usa NOTES_DIR).
+      # :ro = read-only — la app no puede escribir en tus ficheros.
+      - ${NOTES_HOST_DIR:-./notas}:/notas:ro
+    # extra_hosts permite que el contenedor acceda a servicios en la red local.
+    # "host.docker.internal" se resuelve a la IP del host — útil si Ollama
+    # corriera en la misma máquina. Para un servidor remoto, usa la IP directa
+    # en OLLAMA_BASE_URL.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

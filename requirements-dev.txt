@@ -1,0 +1,22 @@
+# =============================================================================
+# Dependencias de desarrollo y testing — Buscador Semántico Local
+# =============================================================================
+# Incluye todas las dependencias de producción + herramientas de test.
+# Uso:  pip install -r requirements-dev.txt
+# =============================================================================
+
+# Todas las dependencias de producción.
+-r requirements.txt
+
+# --- Testing ---
+pytest==8.3.5
+
+# chromadb completo (no solo el cliente) para tests con EphemeralClient.
+# EphemeralClient crea una instancia ChromaDB en memoria — perfecto para
+# tests rápidos sin necesidad de Docker. Solo se usa en tests, nunca en
+# producción (donde usamos el servidor Docker + chromadb-client).
+chromadb==1.5.3
+
+# --- Calidad de código ---
+mypy==1.15.0
+ruff==0.11.12
