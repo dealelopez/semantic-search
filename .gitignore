@@ -1,7 +1,7 @@
 # === Entorno local ===
 .env*
-!.env.example
-!.env.*.example
+!example.env
+!example.env.*
 scripts/pii_denylist.local.txt
 
 # === Docker Compose (overrides locales, pueden contener secretos/puertos) ===

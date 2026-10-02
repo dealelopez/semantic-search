@@ -79,7 +79,7 @@ Diagrama de componentes:
 cd semantic-search
 
 # 2. Configurar variables de entorno
-cp .env.example .env
+cp example.env .env
 # Editar .env: poner la IP de tu servidor Ollama
 
 # 3. Poner tus notas en ./notas/

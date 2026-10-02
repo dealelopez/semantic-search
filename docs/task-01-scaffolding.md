@@ -4,7 +4,7 @@
 
 ## Objetivo
 
-Crear la estructura de directorios, `docker-compose.yml`, `Dockerfile`, `.env.example`, `requirements.txt`, `.gitignore` y `src/config.py`. Verificar que ChromaDB arranca y responde al healthcheck.
+Crear la estructura de directorios, `docker-compose.yml`, `Dockerfile`, `example.env`, `requirements.txt`, `.gitignore` y `src/config.py`. Verificar que ChromaDB arranca y responde al healthcheck.
 
 ## Ficheros a crear
 
@@ -12,7 +12,7 @@ Crear la estructura de directorios, `docker-compose.yml`, `Dockerfile`, `.env.ex
 |---------|-------------|
 | `docker-compose.yml` | Dos servicios: `chromadb` + `app` |
 | `Dockerfile` | Imagen Python 3.12-slim para la app |
-| `.env.example` | Plantilla de variables de entorno |
+| `example.env` | Plantilla de variables de entorno |
 | `.gitignore` | Excluir `.env`, `chroma-data/`, `__pycache__/` |
 | `requirements.txt` | Dependencias pinneadas |
 | `src/__init__.py` | Paquete principal con descripción del proyecto |

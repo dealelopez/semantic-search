@@ -84,7 +84,7 @@ Un documento largo produce un embedding demasiado difuso (intenta representar de
 cd semantic-search
 
 # 2. Configurar variables de entorno
-cp .env.example .env
+cp example.env .env
 # Editar .env: poner la IP de tu servidor Ollama en OLLAMA_BASE_URL
 # Editar .env: poner la ruta a tu vault de notas en NOTES_HOST_DIR
 # (ruta absoluta o relativa al proyecto, ej: /Users/usuario/Obsidian/vault).
@@ -221,7 +221,7 @@ Cuando buscas:
 
 ## Configuración avanzada
 
-Todas las variables se configuran en `.env` (ver `.env.example` para referencia):
+Todas las variables se configuran en `.env` (ver `example.env` para referencia):
 
 | Variable | Default | Descripción |
 |----------|---------|-------------|
