@@ -31,6 +31,9 @@ Todo dockerizado (ChromaDB + app Python). CLI con modos one-shot y REPL interact
 
 ## Tasks
 
+> Ver también [Roadmap](roadmap.md) con ideas a futuro (búsqueda híbrida,
+> evaluación, nuevos formatos, interfaz web...).
+
 | # | Task | Estado | Ficheros principales |
 |---|------|--------|---------------------|
 | 1 | [Scaffolding](task-01-scaffolding.md) | [OK] HECHO | docker-compose.yml, Dockerfile, config.py |
