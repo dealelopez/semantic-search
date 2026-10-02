@@ -1,6 +1,6 @@
 # Task 3: Chunker híbrido de Markdown
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

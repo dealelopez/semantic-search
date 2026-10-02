@@ -1,6 +1,6 @@
 # Task 6: Indexer — Orquestación de indexación completa e incremental
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

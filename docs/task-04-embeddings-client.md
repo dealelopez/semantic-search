@@ -1,6 +1,6 @@
 # Task 4: Cliente de embeddings para Ollama
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

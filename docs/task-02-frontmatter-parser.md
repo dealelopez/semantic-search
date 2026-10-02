@@ -1,6 +1,6 @@
 # Task 2: Parser de frontmatter YAML
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

@@ -1,6 +1,6 @@
 # Task 7: Motor de búsqueda y formateo de resultados
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

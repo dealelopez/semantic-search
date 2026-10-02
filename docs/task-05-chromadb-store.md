@@ -1,6 +1,6 @@
 # Task 5: Store ChromaDB — Operaciones CRUD vectoriales
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

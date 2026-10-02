@@ -1,6 +1,6 @@
 # Task 9: README didáctico y pulido final
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

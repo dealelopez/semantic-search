@@ -1,6 +1,6 @@
 # Task 8: CLI — One-shot y modo REPL interactivo
 
-## Estado: ⬜ PENDIENTE
+## Estado: ✅ HECHO
 
 ## Objetivo
 

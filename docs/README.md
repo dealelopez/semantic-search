@@ -37,14 +37,19 @@ Todo dockerizado (ChromaDB + app Python). CLI con modos one-shot y REPL interact
 | # | Task | Estado | Ficheros principales |
 |---|------|--------|---------------------|
 | 1 | [Scaffolding](task-01-scaffolding.md) | [OK] HECHO | docker-compose.yml, Dockerfile, config.py |
-| 2 | [Frontmatter parser](task-02-frontmatter-parser.md) | ⬜ PENDIENTE | models.py, frontmatter_parser.py |
-| 3 | [Chunker híbrido](task-03-chunker.md) | ⬜ PENDIENTE | chunker.py |
-| 4 | [Embeddings client](task-04-embeddings-client.md) | ⬜ PENDIENTE | embeddings.py |
-| 5 | [ChromaDB store](task-05-chromadb-store.md) | ⬜ PENDIENTE | store.py |
-| 6 | [Indexer](task-06-indexer.md) | ⬜ PENDIENTE | indexer.py |
-| 7 | [Search engine](task-07-search-engine.md) | ⬜ PENDIENTE | search.py |
-| 8 | [CLI](task-08-cli.md) | ⬜ PENDIENTE | cli.py |
-| 9 | [README + polish](task-09-readme-polish.md) | ⬜ PENDIENTE | README.md, notas de ejemplo |
+| 2 | [Frontmatter parser](task-02-frontmatter-parser.md) | ✅ HECHO | models.py, frontmatter_parser.py |
+| 3 | [Chunker híbrido](task-03-chunker.md) | ✅ HECHO | chunker.py |
+| 4 | [Embeddings client](task-04-embeddings-client.md) | ✅ HECHO | embeddings.py |
+| 5 | [ChromaDB store](task-05-chromadb-store.md) | ✅ HECHO | store.py |
+| 6 | [Indexer](task-06-indexer.md) | ✅ HECHO | indexer.py |
+| 7 | [Search engine](task-07-search-engine.md) | ✅ HECHO | search.py |
+| 8 | [CLI](task-08-cli.md) | ✅ HECHO | cli.py |
+| 9 | [README + polish](task-09-readme-polish.md) | ✅ HECHO | README.md (notas de ejemplo descartadas: ver nota) |
+
+> **Nota Task 9:** las notas de ejemplo se descartaron a propósito —
+> `notas/` está ignorado en git y cada usuario monta su propio vault
+> (`NOTES_HOST_DIR`, volumen `:ro`). La verificación end-to-end queda
+> pendiente de un entorno con Docker + Ollama reales.
 
 ## Orden de implementación
 
