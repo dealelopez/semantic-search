@@ -26,6 +26,7 @@
 # 5. Devuelve un ParsedNote listo para chunking
 # =============================================================================
 
+import fnmatch
 import logging
 import re
 from pathlib import Path
@@ -173,9 +174,11 @@ def scan_notes(directory: str | Path) -> list[Path]:
     """
     Escanea recursivamente un directorio buscando ficheros .md.
 
-    Ignora directorios cuyos nombres estén en config.NOTES_IGNORE_PATTERNS
-    (por defecto: .obsidian, .trash, .git, _templates, .stversions, .stfolder, 4-meta). Esto evita indexar
-    configuraciones de Obsidian, ficheros borrados, y plantillas.
+    Ignora directorios según config.NOTES_IGNORE_PATTERNS. Cada patrón puede
+    ser un nombre exacto (ej: "4-meta") o un glob estilo fnmatch (ej: ".*"
+    para ignorar todas las carpetas ocultas como .obsidian, .app, .vscode).
+    Esto evita indexar configuraciones de Obsidian, ficheros borrados,
+    y plantillas.
 
     Args:
         directory: Ruta al directorio raíz de notas.
@@ -190,18 +193,31 @@ def scan_notes(directory: str | Path) -> list[Path]:
         logger.warning("Directorio de notas no encontrado: %s", directory)
         return []
 
-    ignore = set(config.NOTES_IGNORE_PATTERNS)
+    ignore = config.NOTES_IGNORE_PATTERNS
     paths: list[Path] = []
 
     for path in sorted(directory.rglob("*.md")):
-        # Verificar que ningún componente del path está en la lista de ignorados.
-        # Ejemplo: si path es notas/.obsidian/workspace.md, ".obsidian" está
-        # en ignore → se salta.
-        parts = set(path.relative_to(directory).parts[:-1])  # directorios, sin el fichero
-        if parts & ignore:
+        # Verificar que ningún componente del path coincide con los patrones
+        # de ignorados. Soporta nombres exactos ("4-meta") y globs (".*").
+        # Ejemplo: notas/.obsidian/workspace.md → ".obsidian" coincide con ".*".
+        parts = path.relative_to(directory).parts[:-1]  # directorios, sin el fichero
+        if _is_ignored(parts, ignore):
             logger.debug("Ignorando (directorio excluido): %s", path)
             continue
         paths.append(path)
 
     logger.info("Encontrados %d ficheros .md en %s", len(paths), directory)
     return paths
+
+
+def _is_ignored(parts: tuple | list, patterns: list[str]) -> bool:
+    """
+    Comprueba si algún componente del path coincide con los patrones.
+
+    Usa fnmatch para que ".*" ignore todas las carpetas ocultas
+    (.obsidian, .app, .vscode, .stversions...) presentes y futuras.
+    Sin comodines, fnmatch equivale a igualdad exacta.
+    """
+    return any(
+        fnmatch.fnmatch(part, pat) for part in parts for pat in patterns
+    )

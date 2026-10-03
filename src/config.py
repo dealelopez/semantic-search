@@ -160,7 +160,8 @@ Para desarrollo local, puedes hacer:
 
 # Directorios a ignorar al escanear notas.
 # Configurable vía NOTES_IGNORE_DIRS en .env (separados por coma).
-_DEFAULT_IGNORE_DIRS = ".obsidian,.trash,.git,_templates,.stversions,.stfolder,4-meta"
+# Acepta nombres exactos ("4-meta") y globs fnmatch (".*" = todas las ocultas).
+_DEFAULT_IGNORE_DIRS = ".obsidian,.trash,.git,_templates,.stversions,.stfolder,4-meta,.*"
 NOTES_IGNORE_PATTERNS: list[str] = [
     d.strip()
     for d in os.getenv("NOTES_IGNORE_DIRS", _DEFAULT_IGNORE_DIRS).split(",")
@@ -168,9 +169,11 @@ NOTES_IGNORE_PATTERNS: list[str] = [
 ]
 """
 Nombres de directorios a ignorar durante el escaneo recursivo de notas.
-Cualquier directorio cuyo nombre esté en esta lista se salta entero.
+Cualquier directorio cuyo nombre coincida con un patrón se salta entero.
+Acepta globs estilo fnmatch: ".*" ignora todas las carpetas ocultas
+(.obsidian, .app, .vscode, .stversions, .varios, futuras...).
 Configurable vía variable de entorno NOTES_IGNORE_DIRS (separados por coma).
-Default: .obsidian, .trash, .git, _templates, .stversions, .stfolder, 4-meta
+Default: .obsidian, .trash, .git, _templates, .stversions, .stfolder, 4-meta, .*
 """
 
 
