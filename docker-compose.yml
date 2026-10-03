@@ -33,6 +33,9 @@ services:
     # UID:GID con los que corre el contenedor (PUID/PGID en .env).
     # Así los ficheros de DATA_DIR quedan con tu propietario, no root.
     user: "${PUID:-1000}:${PGID:-1000}"
+    environment:
+      # Zona horaria (TZ en .env, default UTC). Afecta a logs y fechas.
+      - TZ=${TZ:-UTC}
     volumes:
       - ${DATA_DIR:-./chroma-data}:/data
     ports:
@@ -63,6 +66,9 @@ services:
     build: .
     container_name: semantic-search-app
     env_file: .env
+    environment:
+      # Zona horaria (TZ en .env, default UTC). Afecta a logs y fechas.
+      - TZ=${TZ:-UTC}
     # Mismo UID:GID que chromadb (PUID/PGID en .env). Sustituye al usuario
     # 'appuser' de la imagen: la app solo lee /notas (:ro) y no escribe nada.
     user: "${PUID:-1000}:${PGID:-1000}"

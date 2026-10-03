@@ -107,9 +107,12 @@ def parse_note(filepath: Path) -> ParsedNote:
     title = str(title) if title is not None else filepath.stem
 
     # Tags: lista de strings. Si el campo no existe o no es lista, vacío.
+    # Se sanean: se descartan None/vacíos y se admite string "a, b".
     raw_tags = meta.get("tags", [])
     if isinstance(raw_tags, list):
-        tags = [str(t) for t in raw_tags]
+        tags = [str(t).strip() for t in raw_tags if t is not None and str(t).strip()]
+    elif isinstance(raw_tags, str):
+        tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
     else:
         tags = []
 
