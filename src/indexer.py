@@ -152,12 +152,23 @@ class Indexer:
             return report
 
         # ── Fase 3: Upsert por nota (rápido) ──
+        # Cada upsert va protegido: si una nota falla (ej: metadata que
+        # ChromaDB rechaza), se registra el error y se continúa con las
+        # demás en vez de abortar toda la indexación y perder el trabajo
+        # de embeddings ya hecho.
         offset = 0
         for parsed, chunks in prepared:
             n = len(chunks)
             note_embeddings = all_embeddings[offset : offset + n]
-            self.store.upsert_chunks(chunks, note_embeddings, parsed.metadata)
-            report.chunks_created += n
+            try:
+                self.store.upsert_chunks(chunks, note_embeddings, parsed.metadata)
+                report.chunks_created += n
+            except Exception as e:
+                error_msg = f"{parsed.metadata.source_path}: {e}"
+                report.errors.append(error_msg)
+                logger.warning(
+                    "Error guardando %s: %s", parsed.metadata.source_path, e
+                )
             offset += n
 
         report.duration_seconds = time.time() - start

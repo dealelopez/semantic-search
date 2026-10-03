@@ -1,0 +1,3 @@
+- [ ] Añadir notificaciones a $ntfy cuando terminen los indexados
+- [ ] Posibilidad de cron para indexado de diffs
+- [ ] Usar Jev para validar tags/tokens

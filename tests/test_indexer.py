@@ -168,6 +168,28 @@ class TestErrores:
         assert report.notes_processed >= 1
         assert len(report.errors) >= 1
 
+    def test_error_en_upsert_no_aborta_full(self, mock_embedder, mock_store, chunker):
+        """Si el upsert de una nota falla (ej: metadata rechazada por
+        ChromaDB), las demás notas se guardan igual y el error queda
+        registrado en vez de propagarse."""
+        calls = {"n": 0}
+
+        def flaky_upsert(chunks, embeddings, metadata):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise ValueError(
+                    "Expected metadata list value for key 'tags' to be non-empty"
+                )
+            return len(chunks)
+
+        mock_store.upsert_chunks.side_effect = flaky_upsert
+        indexer = Indexer(embedder=mock_embedder, store=mock_store, chunker=chunker)
+
+        report = indexer.full_reindex(str(FIXTURES), show_progress=False)
+        assert len(report.errors) == 1
+        assert "tags" in report.errors[0]
+        assert report.chunks_created > 0
+
 
 # ---------------------------------------------------------------------------
 # compute_content_hash

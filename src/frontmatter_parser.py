@@ -174,7 +174,7 @@ def scan_notes(directory: str | Path) -> list[Path]:
     Escanea recursivamente un directorio buscando ficheros .md.
 
     Ignora directorios cuyos nombres estén en config.NOTES_IGNORE_PATTERNS
-    (por defecto: .obsidian, .trash, .git, _templates). Esto evita indexar
+    (por defecto: .obsidian, .trash, .git, _templates, .stversions, .stfolder, 4-meta). Esto evita indexar
     configuraciones de Obsidian, ficheros borrados, y plantillas.
 
     Args:

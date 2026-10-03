@@ -144,16 +144,22 @@ class VectorStore:
             documents.append(chunk.text)
 
             # Metadata filtrable en búsquedas.
+            # OJO: ChromaDB rechaza listas vacías ("Expected metadata list
+            # value ... to be non-empty") y valores None. Una nota sin
+            # frontmatter tiene tags=[] → hay que omitir la clave en vez
+            # de enviar la lista vacía.
             meta: dict = {
                 "source": chunk.source_path,
                 "heading": chunk.heading_path,
                 "note_type": note_metadata.note_type,
-                "tags": note_metadata.tags,
             }
+            if note_metadata.tags:
+                meta["tags"] = note_metadata.tags
             if note_metadata.created:
                 meta["created"] = note_metadata.created
-            if hasattr(note_metadata, "content_hash"):
-                meta["content_hash"] = note_metadata.content_hash
+            content_hash = getattr(note_metadata, "content_hash", None)
+            if content_hash:
+                meta["content_hash"] = content_hash
 
             metadatas.append(meta)
 
@@ -472,7 +478,9 @@ class VectorStore:
             self._collection.upsert(
                 ids=[it["id"] for it in batch],
                 documents=[it["document"] for it in batch],
-                metadatas=[it["metadata"] for it in batch],
+                # Sanitizar: exports antiguos pueden contener tags=[] o
+                # valores None que ChromaDB 1.5+ rechaza.
+                metadatas=[_sanitize_metadata(it["metadata"]) for it in batch],
                 embeddings=[it["embedding"] for it in batch],
             )
             total_imported += len(batch)
@@ -502,6 +510,21 @@ class VectorStore:
 # =============================================================================
 # HELPER — IDs deterministas
 # =============================================================================
+
+def _sanitize_metadata(meta: dict) -> dict:
+    """
+    Elimina valores que ChromaDB rechaza en metadatos: listas vacías y None.
+
+    ChromaDB 1.5+ valida con "Expected metadata list value ... to be
+    non-empty" y no acepta None. Los exports antiguos o notas sin tags
+    pueden contenerlos — sanitizar evita que un upsert falle por esto.
+    """
+    return {
+        k: v
+        for k, v in meta.items()
+        if not (v is None or (isinstance(v, list) and len(v) == 0))
+    }
+
 
 def _deterministic_id(source_path: str, chunk_index: int) -> str:
     """

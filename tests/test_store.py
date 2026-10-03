@@ -31,7 +31,9 @@ def store():
 
 
 def _make_metadata(source: str = "nota-test.md", tags: list[str] | None = None) -> NoteMetadata:
-    tags = tags or ["nota", "ia"]
+    # None → tags por defecto; [] explícito se respeta (nota sin frontmatter).
+    if tags is None:
+        tags = ["nota", "ia"]
     return NoteMetadata(
         source_path=source,
         title="Test Note",
@@ -91,6 +93,31 @@ class TestUpsert:
     def test_upsert_vacio(self, store):
         count = store.upsert_chunks([], [], _make_metadata())
         assert count == 0
+
+    def test_upsert_sin_tags(self, store):
+        """Nota sin frontmatter (tags=[]) → ChromaDB 1.5+ rechaza listas
+        vacías, el store debe omitir la clave y no fallar."""
+        chunks = _make_chunks(n=2)
+        embeddings = _make_embeddings(n=2)
+        meta = _make_metadata(tags=[])
+
+        count = store.upsert_chunks(chunks, embeddings, meta)
+        assert count == 2
+
+        # La nota queda buscable aunque no tenga tags.
+        results = store.search(query_embedding=[0.1] * 768, n_results=5)
+        assert len(results) > 0
+        assert results[0].tags == []
+
+    def test_upsert_sin_content_hash(self, store):
+        """content_hash=None no debe enviarse como None a ChromaDB."""
+        chunks = _make_chunks(n=1)
+        embeddings = _make_embeddings(n=1)
+        meta = _make_metadata()
+        meta.content_hash = None
+
+        count = store.upsert_chunks(chunks, embeddings, meta)
+        assert count == 1
 
 
 # ---------------------------------------------------------------------------
@@ -257,6 +284,34 @@ class TestStats:
         stats = store.collection_stats()
         assert stats["total_chunks"] == 0
         assert stats["total_sources"] == 0
+
+
+# ---------------------------------------------------------------------------
+# _sanitize_metadata (función pura, sin ChromaDB)
+# ---------------------------------------------------------------------------
+
+class TestSanitizeMetadata:
+
+    def test_elimina_lista_vacia_y_none(self):
+        from src.store import _sanitize_metadata
+        out = _sanitize_metadata({
+            "source": "a.md",
+            "tags": [],
+            "content_hash": None,
+            "note_type": "sin-tipo",
+        })
+        assert out == {"source": "a.md", "note_type": "sin-tipo"}
+
+    def test_conserva_valores_validos(self):
+        from src.store import _sanitize_metadata
+        meta = {
+            "source": "a.md",
+            "tags": ["nota", "ia"],
+            "note_type": "nota",
+            "created": "2026-09-15",
+            "content_hash": "abc123",
+        }
+        assert _sanitize_metadata(meta) == meta
 
 
 # ---------------------------------------------------------------------------

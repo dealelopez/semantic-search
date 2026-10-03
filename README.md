@@ -234,7 +234,7 @@ Todas las variables se configuran en `.env` (ver `example.env` para referencia):
 | `PUID` / `PGID` | `1000` | UID/GID con los que corren los contenedores (ver con `id -u` / `id -g`) |
 | `NOTES_HOST_DIR` | `./notas` | Ruta en el host a tu vault (no hay ejemplos en el repo; apunta a tu carpeta real) |
 | `NOTES_DIR` | `/notas` | Ruta dentro del contenedor (no cambiar) |
-| `NOTES_IGNORE_DIRS` | `.obsidian,.trash,.git,_templates` | Directorios a ignorar (separados por coma) |
+| `NOTES_IGNORE_DIRS` | `.obsidian,.trash,.git,_templates,.stversions,.stfolder,4-meta` | Directorios a ignorar (separados por coma) |
 | `MAX_CHUNK_TOKENS` | `300` | Tamaño máximo de un chunk |
 | `MIN_CHUNK_TOKENS` | `100` | Tamaño mínimo (se agrupan los pequeños) |
 | `OVERLAP_TOKENS` | `50` | Solapamiento entre chunks |
