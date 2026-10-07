@@ -1,3 +1,8 @@
+- [x] Ruta aprendizaje: `docs/learning-path.md` + `docs/task-10-evaluacion-recall.md` + esqueleto `scripts/eval_recall.py` (2026-10-07)
+- [x] Rellenar `scripts/eval_queries.yml` con casos reales + baseline (recall@5=0.42, 2026-10-07, ver task-10)
+- [x] Diseñar task-11 (enriquecimiento embeddings) y task-12 (synonyms.yml) en `docs/`
+- [ ] Implementar task-11 (flags + `build_enriched_text` + `full reindex` + re-medir)
+- [ ] Implementar task-12 (`src/synonyms.yml` + expansión multi-query + `--no-expand`)
 - [ ] Añadir notificaciones a $ntfy cuando terminen los indexados
 - [ ] Posibilidad de cron para indexado de diffs
 - [ ] Usar Jev para validar tags/tokens

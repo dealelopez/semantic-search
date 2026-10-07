@@ -14,6 +14,9 @@ aparcamiento de ideas para cuando apetezca picar algo.
 ## Búsqueda y relevancia
 
 - [ ] **Evaluación con queries fijas** (`tests/`, script nuevo en `scripts/`).
+  → EN CURSO como `docs/task-10-evaluacion-recall.md` + `scripts/eval_recall.py`
+  + `scripts/eval_queries.yml` (2026-10-07). Falta rellenar con casos reales
+  del vault (legumbres / ZFS) y anotar baseline.
   Set de ~20 queries con resultados esperados que mida precisión/recall.
   Es la idea con más retorno: permite saber si cualquier otro cambio
   (chunking, modelo) mejora o empeora. Esfuerzo: M.

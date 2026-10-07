@@ -1,0 +1,54 @@
+# =============================================================================
+# eval_queries.yml — Set fijo de evaluación de recall (baseline 2026-10-07)
+# =============================================================================
+# Casos reales del vault. `source` es el basename indexado (ver `search --json`).
+# Baseline medido contra índice actual (994 notas, 6700 chunks, nomic-embed-text):
+# - "legumbres": top-100 solo trae 2 recetas (alubias 0.632, berza 0.616);
+#   falafels/hummus (garbanzos) FUERA del top-100 -> recall@20 = 0.50.
+# - "gestión de discos": genéricos a 0.73; zfs-*.md en rank 54-69 (~0.64).
+#
+# Tras task-11/task-12, re-correr `python3 scripts/eval_recall.py` y comparar.
+# =============================================================================
+
+- query: legumbres
+  n: 20
+  esperados:
+    - receta--alubias-pintas-estofadas.md
+    - receta--berza-judias-verdes.md
+    - receta--falafels.md
+    - cocina--hummus.md
+
+- query: plato con garbanzos
+  n: 20
+  esperados:
+    - receta--falafels.md
+    - cocina--hummus.md
+    - cocina-platos-recetas-familia.md
+
+- query: lentejas
+  n: 20
+  esperados:
+    - ideas-menu.md
+    - cocina-platos-recetas-familia.md
+    - familia--recetas-comida.md
+
+- query: gestión de discos
+  n: 20
+  esperados:
+    - zfs--guia-basica.md
+    - 260930--zfs-operaciones.md
+    - zfs-almacenamiento.md
+    - utilidad-discos--guia-basica.md
+
+- query: ZFS pool dataset
+  n: 20
+  esperados:
+    - zfs--guia-basica.md
+    - 260930--zfs-operaciones.md
+    - zfs-almacenamiento.md
+
+- query: snapshots y replicación ZFS
+  n: 20
+  esperados:
+    - 260930--zfs-operaciones.md
+    - zfs--guia-basica.md
